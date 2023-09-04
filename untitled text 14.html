@@ -1,0 +1,60 @@
+<!DOCTYPE html>  
+<html>  
+<head>  
+  <title>Whisper API Demo</title>  
+</head>  
+<body>  
+  <h1>Whisper API Demo</h1>  
+  <form id="audio-form">  
+    <label for="audio-file">Select Audio File:</label>  
+    <input type="file" id="audio-file" name="audio-file">  
+    <br>  
+    <label for="language">Language:</label>  
+    <select id="language" name="language">  
+      <option value="zh">Chinese</option>  
+      <option value="ja">Japanese</option>  
+      <option value="en">English</option>  
+    </select>  
+    <br>  
+    <label for="whisper-size">Whisper Size:</label>  
+    <select id="whisper-size" name="whisper-size">  
+      <option value="medium">Medium</option>  
+      <option value="large">Large</option>  
+    </select>  
+    <br>  
+    <input type="submit" value="Transcribe Audio">  
+  </form>  
+  <div id="result"></div>  
+  
+  <script>  
+    document.getElementById('audio-form').addEventListener('submit', function(event) {  
+      event.preventDefault(); // 阻止表单默认的提交行为  
+  
+      var language = document.getElementById('language').value;  
+      var whisperSize = document.getElementById('whisper-size').value;  
+      var audioFile = document.getElementById('audio-file').files[0];  
+  
+      if (audioFile) {  
+        var formData = new FormData();  
+        formData.append('audio-file', audioFile);  
+        formData.append('language', language);  
+        formData.append('whisper-size', whisperSize);  
+  
+        fetch('http://localhost:8080/api', {  
+          method: 'POST',  
+          body: formData,  
+        })  
+        .then(response => response.text())  
+        .then(data => {  
+          document.getElementById('result').innerText = data;  
+        })  
+        .catch(error => {  
+          console.error('Error:', error);  
+        });  
+      } else {  
+        alert('Please select an audio file.');  
+      }  
+    });  
+  </script>  
+</body>  
+</html>
